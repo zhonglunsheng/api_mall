@@ -1,10 +1,9 @@
-package com.mmall.controller.backend;
+package com.mmall.controller.portal;
 
 import com.mmall.common.Const;
 import com.mmall.common.ServiceResponse;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
-import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,5 +37,41 @@ public class UserManageController {
             session.setAttribute(Const.CURRENT_USER,response.getData());
         }
         return response;
+    }
+
+    /**
+     * 退出登录
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "logout.do",method = RequestMethod.GET)
+    @ResponseBody
+    public ServiceResponse<String> logout(HttpSession session){
+        session.removeAttribute(Const.CURRENT_USER);
+        return ServiceResponse.createBySuccess();
+    }
+
+    /**
+     * 用户注册
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "regist.do",method = RequestMethod.POST)
+    @ResponseBody
+    public ServiceResponse regist(User user){
+        return iUserService.regist(user);
+
+    }
+
+    /**
+     * 验证用户名或密码是否存在
+     * @param str
+     * @param type
+     * @return
+     */
+    @RequestMapping(value = "checkValid.do",method = RequestMethod.POST)
+    @ResponseBody
+    public ServiceResponse checkValid(String str,String type){
+        return iUserService.checkValid(str,type);
     }
 }

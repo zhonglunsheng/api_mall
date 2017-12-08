@@ -1,10 +1,10 @@
 package com.mmall.service.impl;
 
+import com.mmall.common.Const;
 import com.mmall.common.ServiceResponse;
 import com.mmall.dao.UserMapper;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +30,52 @@ public class UserServiceImpl implements IUserService{
             return ServiceResponse.createByError("用户名或密码错误");
         }
 
-        user.setPassword(StringUtils.EMPTY);
+        user.setPassword(org.apache.commons.lang3.StringUtils.EMPTY);
         return ServiceResponse.createBySuccess("登录成功",user);
     }
+
+    @Override
+    public ServiceResponse regist(User user) {
+        ServiceResponse validResponse = this.checkValid(user.getUsername(),Const.USERNAME);
+        if (!validResponse.isSuccess()){
+            return validResponse;
+        }
+
+        validResponse = this.checkValid(user.getUsername(),Const.EMAIL);
+        if (!validResponse.isSuccess()){
+            return validResponse;
+        }
+
+        user.setRole(Const.Role.ROLE_CUSTOM);
+        int result = userMapper.insert(user);
+        if (result == 0){
+            return ServiceResponse.createByError("注册失败");
+        }
+        return ServiceResponse.createBySuccess("注册成功");
+    }
+
+    @Override
+    public ServiceResponse checkValid(String str,String type){
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(type)){
+            //开始验证
+            if (Const.USERNAME.equals(type)){
+                int result = userMapper.checkUsername(str);
+                if (result > 0){
+                    return ServiceResponse.createByError("用户名已存在");
+                }
+            }
+
+            if (Const.EMAIL.equals(type)){
+                int result = userMapper.checkEmail(str);
+                if (result > 0){
+                    return ServiceResponse.createByError("邮箱已存在");
+                }
+            }
+        }else{
+            return ServiceResponse.createByError("参数错误");
+        }
+        return ServiceResponse.createBySuccess("校验成功");
+    }
+
+
 }

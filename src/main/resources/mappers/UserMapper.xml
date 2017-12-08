@@ -165,4 +165,16 @@
     FROM mmall_user
     WHERE username=#{username} and password=#{password}
   </select>
+  <select id="selectQuestion" parameterType="string" resultType="string">
+    SELECT question
+    FROM mmall_user
+    WHERE username=#{username}
+  </select>
+  <select id="checkAnswer" parameterType="map" resultType="int">
+    SELECT COUNT(1)
+    FROM mmall_user
+    WHERE username=#{username}
+    AND question=#{question}
+    AND answer=#{answer}
+  </select>
 </mapper>

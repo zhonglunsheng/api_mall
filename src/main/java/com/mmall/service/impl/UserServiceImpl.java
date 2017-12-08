@@ -2,11 +2,15 @@ package com.mmall.service.impl;
 
 import com.mmall.common.Const;
 import com.mmall.common.ServiceResponse;
+import com.mmall.common.TokenCache;
 import com.mmall.dao.UserMapper;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 
 /**
@@ -77,5 +81,28 @@ public class UserServiceImpl implements IUserService{
         return ServiceResponse.createBySuccess("校验成功");
     }
 
+    @Override
+    public ServiceResponse<String> selectQuestion(String username){
+        ServiceResponse response = this.checkValid(username,Const.USERNAME);
+        if (response.isSuccess()){
+            return ServiceResponse.createByError("用户不存在");
+        }
+        String question = userMapper.selectQuestion(username);
+        if (StringUtils.isNotBlank(question)){
+            return ServiceResponse.createBySuccess(question);
+        }
+        return ServiceResponse.createByError("此用户没有设置密保问题");
+    }
+
+    @Override
+    public ServiceResponse<String> checkAnswer(String username,String question,String answer){
+        int resultCount = userMapper.checkAnswer(username,question,answer);
+        if (resultCount > 0){
+            String forgetToken = UUID.randomUUID().toString();
+            TokenCache.setKey(TokenCache.TOKEN_PREFIX+username,forgetToken);
+            return ServiceResponse.createBySuccess(forgetToken);
+        }
+        return ServiceResponse.createByError("密保答案错误");
+    }
 
 }

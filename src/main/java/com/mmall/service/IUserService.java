@@ -13,4 +13,8 @@ public interface IUserService {
     ServiceResponse regist(User user);
 
     ServiceResponse checkValid(String str, String type);
+
+    ServiceResponse<String> selectQuestion(String username);
+
+    ServiceResponse<String> checkAnswer(String username, String question, String answer);
 }

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
  * Created by zhonglunsheng on 2017/12/6.
  */
 @Controller
-@RequestMapping("/manage/user")
+@RequestMapping("/user")
 public class UserManageController {
 
     @Autowired
@@ -69,9 +69,50 @@ public class UserManageController {
      * @param type
      * @return
      */
-    @RequestMapping(value = "checkValid.do",method = RequestMethod.POST)
+    @RequestMapping(value = "check_valid.do",method = RequestMethod.POST)
     @ResponseBody
     public ServiceResponse checkValid(String str,String type){
         return iUserService.checkValid(str,type);
     }
+
+    /**
+     * 获取当前用户信息
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "get_user_info.do",method = RequestMethod.POST)
+    @ResponseBody
+    public ServiceResponse<User> getUserInfo(HttpSession session){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null){
+            return ServiceResponse.createByError("请先登录");
+        }
+        return ServiceResponse.createBySuccess(user);
+    }
+
+    /**
+     * 忘记密码得到密保问题
+     * @param username
+     * @return
+     */
+    @RequestMapping(value = "forget_get_question.do",method = RequestMethod.POST)
+    @ResponseBody
+    public ServiceResponse<String> forgetGetQuestion(String username){
+        return iUserService.selectQuestion(username);
+    }
+
+    /**
+     * 忘记密码匹配密保答案
+     * @param username
+     * @param question
+     * @param answer
+     * @return
+     */
+    @RequestMapping(value = "forget_check_answer.do",method = RequestMethod.POST)
+    @ResponseBody
+    public ServiceResponse forgetCheckAnswer(String username,String question,String answer){
+        return iUserService.checkAnswer(username,question,answer);
+    }
+
+
 }

@@ -17,4 +17,22 @@ public interface IUserService {
     ServiceResponse<String> selectQuestion(String username);
 
     ServiceResponse<String> checkAnswer(String username, String question, String answer);
+
+    ServiceResponse<String> restPassword(String username, String passwordNew, String forgetToken);
+
+    ServiceResponse<String> updatePassword(String passwordOld, String passwordNew, User user);
+
+    ServiceResponse<User> updateInformation(User user);
+
+    ServiceResponse<User> getInformation(User user);
+
+
+    //backend
+
+    /**
+     *检查当前用户是否为管理员
+     * @param user
+     * @return
+     */
+    ServiceResponse<String> checkAdminRole(User user);
 }

@@ -151,30 +151,54 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
   <select id="checkUsername" parameterType="string" resultType="int">
     SELECT COUNT(1) from mmall_user
     WHERE username=#{username}
   </select>
+
   <select id="checkEmail" parameterType="string" resultType="int">
     SELECT COUNT(1) from mmall_user
     WHERE email=#{email}
   </select>
+
   <select id="selectLogin" parameterType="map" resultMap="BaseResultMap">
     SELECT
     <include refid="Base_Column_List"></include>
     FROM mmall_user
     WHERE username=#{username} and password=#{password}
   </select>
+
   <select id="selectQuestion" parameterType="string" resultType="string">
     SELECT question
     FROM mmall_user
     WHERE username=#{username}
   </select>
+
   <select id="checkAnswer" parameterType="map" resultType="int">
     SELECT COUNT(1)
     FROM mmall_user
     WHERE username=#{username}
     AND question=#{question}
     AND answer=#{answer}
+  </select>
+
+  <update id="restPassword" parameterType="map">
+    UPDATE mmall_user
+    SET password=#{passwordNew}
+    WHERE username=#{username}
+  </update>
+
+  <select id="checkPassword" parameterType="map" resultType="int">
+    SELECT COUNT(1)
+    FROM mmall_user
+    WHERE id=#{userId}
+    AND password=#{passwordOld}
+  </select>
+  
+  <select id="checkEmailByUserId" parameterType="map" resultType="int">
+    SELECT COUNT(1) from mmall_user
+    WHERE email=#{email}
+    AND id!=#{userId}
   </select>
 </mapper>

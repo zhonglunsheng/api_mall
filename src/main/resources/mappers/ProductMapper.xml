@@ -76,10 +76,10 @@
       <if test="status != null" >
         status,
       </if>
-      <if test="createTime != null" >
+      <if test="createTime == null" >
         create_time,
       </if>
-      <if test="updateTime != null" >
+      <if test="updateTime == null" >
         update_time,
       </if>
     </trim>
@@ -114,10 +114,10 @@
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
+      <if test="createTime == null" >
         now(),
       </if>
-      <if test="updateTime != null" >
+      <if test="updateTime == null" >
         now(),
       </if>
     </trim>
@@ -176,4 +176,25 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="getProductList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"></include>
+    from mmall_product
+    ORDER by id ASC
+  </select>
+
+  <select id="searchProductByNameAndIdList" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"></include>
+    from mmall_product
+    <where>
+      <if test="#{productName != null}">
+        and name like #{productName}
+      </if>
+      <if test="#{productId != null}">
+        and id = #{productId}
+      </if>
+    </where>
+  </select>
 </mapper>

@@ -111,7 +111,7 @@ public class ProductManagerController {
         if (user == null){
             return ServiceResponse.createByErrorMessage("请先登录");
         }
-
+git
         ServiceResponse response = iUserService.checkAdminRole(user);
         if (response.isSuccess()){
             return iProductService.getProductList(pageNum,pageSize);

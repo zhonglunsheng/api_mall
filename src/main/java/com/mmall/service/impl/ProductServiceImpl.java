@@ -3,22 +3,24 @@ package com.mmall.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import com.mmall.common.Const;
 import com.mmall.common.ResponseCode;
 import com.mmall.common.ServiceResponse;
 import com.mmall.dao.CategoryMapper;
 import com.mmall.dao.ProductMapper;
 import com.mmall.pojo.Category;
 import com.mmall.pojo.Product;
+import com.mmall.service.ICategoryService;
 import com.mmall.service.IProductService;
 import com.mmall.util.DateTimeUtil;
 import com.mmall.util.PropertiesUtil;
 import com.mmall.vo.ProductDetailVo;
 import com.mmall.vo.ProductListVo;
 import org.apache.commons.lang3.StringUtils;
-import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +34,9 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     private CategoryMapper categoryMapper;
+
+    @Autowired
+    private ICategoryService iCategoryService;
 
     @Override
     public ServiceResponse<String> saveOrUpdateProduct(Product product){
@@ -151,7 +156,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public ServiceResponse<PageInfo> searchProductList(String productName, Integer productId, Integer pageNum, Integer pageSize){
+    public ServiceResponse<PageInfo> searchProductByIdAndName(String productName, Integer productId, Integer pageNum, Integer pageSize){
         PageHelper.startPage(pageNum,pageSize);
         if (StringUtils.isNotBlank(productName)){
             productName=new StringBuilder().append("%").append(productName).append("%").toString();
@@ -167,5 +172,59 @@ public class ProductServiceImpl implements IProductService {
         PageInfo pageResult = new PageInfo(products);
         pageResult.setList(productListVos);
         return ServiceResponse.createBySuccess(pageResult);
+    }
+
+    @Override
+    public ServiceResponse<ProductDetailVo> getProductDetail(Integer productId){
+        if (productId == null){
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGMENT.getCode(),ResponseCode.ILLEGAL_ARGMENT.getDesc());
+        }
+        Product product = productMapper.selectByPrimaryKey(productId);
+        if (product == null){
+            return ServiceResponse.createByErrorMessage("商品不存在");
+        }
+        if (product.getStatus() != Const.ProductStateEnum.ON_SALE.getStatus()){
+            return ServiceResponse.createByErrorMessage("商品已下架");
+        }
+        ProductDetailVo productDetailVo = assembleProductDetailVo(product);
+        return ServiceResponse.createBySuccess(productDetailVo);
+    }
+
+    @Override
+    public ServiceResponse<PageInfo> getProductByKeywordCategory(String keyword, Integer categoryId, int pageNum, int pageSize, String orderBy){
+        if (StringUtils.isBlank(keyword) && categoryId == null){
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGMENT.getCode(),ResponseCode.ILLEGAL_ARGMENT.getDesc());
+        }
+        List<Integer> categoryIdList = new ArrayList<Integer>();
+        List<ProductListVo> productListVoList = Lists.newArrayList();
+        if (categoryId != null){
+            Category category = categoryMapper.selectByPrimaryKey(categoryId);
+            if (category == null && StringUtils.isBlank(keyword)){
+                //没有该分类时且没有关键字时，返回一个空结果集
+                PageHelper.startPage(pageNum,pageSize);
+                PageInfo pageInfo = new PageInfo(productListVoList);
+                return ServiceResponse.createBySuccess(pageInfo);
+            }
+            categoryIdList = iCategoryService.getChildrenCategoryById(category.getId()).getData();
+        }
+        if (StringUtils.isNotBlank(keyword)){
+            keyword = new StringBuilder().append("%").append(keyword).append("%").toString();
+        }
+
+        PageHelper.startPage(pageNum,pageSize);
+
+        if (StringUtils.isNotBlank(orderBy)){
+            if (Const.ProductListOrderBy.PRICE_ASC_DESC.contains(orderBy)){
+                String[] orderByArrays = orderBy.split("_");
+                PageHelper.orderBy(orderByArrays[0]+" "+orderByArrays[1]);
+            }
+        }
+        List<Product> productList = productMapper.searchProductByKeywordAndCategoryIds(StringUtils.isBlank(keyword)?null:keyword,categoryIdList.size()==0?null:categoryIdList);
+        for (Product product: productList) {
+            ProductListVo productListVo = assembleProductListVo(product);
+            productListVoList.add(productListVo);
+        }
+        PageInfo pageInfo = new PageInfo(productListVoList);
+        return ServiceResponse.createBySuccess(pageInfo);
     }
 }

@@ -1,5 +1,6 @@
 package com.mmall.service.impl;
 
+import com.google.common.base.Splitter;
 import com.mmall.common.Const;
 import com.mmall.common.ResponseCode;
 import com.mmall.common.ServiceResponse;
@@ -14,6 +15,7 @@ import com.mmall.vo.CartProductVo;
 import com.mmall.vo.CartVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -53,14 +55,61 @@ public class CartService implements ICartService{
             cartMapper.updateByPrimaryKeySelective(cart);
         }
         //返回购物车信息
-        return this.list(userId);
+        return this.getList(userId);
+    }
+
+    @Override
+    public ServiceResponse<CartVo> update(Integer userId, Integer count, Integer productId){
+        if (count == null || productId == null){
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGMENT.getCode(),ResponseCode.ILLEGAL_ARGMENT.getDesc());
+        }
+        Cart cart = cartMapper.selectByUserIdProductId(userId,productId);
+        if (cart != null){
+           cart.setQuantity(count);
+           cartMapper.updateByPrimaryKeySelective(cart);
+        }else{
+            return ServiceResponse.createByErrorMessage("购物车订单错误");
+        }
+        return this.getList(userId);
+    }
+
+    @Override
+    public ServiceResponse<CartVo> delete(Integer userId, String productIds){
+        List<String> productIdList = Splitter.on(",").splitToList(productIds);
+        if (CollectionUtils.isEmpty(productIdList)){
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGMENT.getCode(),ResponseCode.ILLEGAL_ARGMENT.getDesc());
+        }
+        cartMapper.deleteByUserIdProductIds(userId,productIdList);
+        return this.getList(userId);
     }
 
     @Override
     public ServiceResponse<CartVo> list(Integer userId){
+        return this.getList(userId);
+    }
+
+    @Override
+    public ServiceResponse<CartVo> checkedOrUnchecked(Integer userId, Integer productId, Integer checkedStatus){
+        if (userId == null){
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGMENT.getCode(),ResponseCode.ILLEGAL_ARGMENT.getDesc());
+        }
+        cartMapper.updateByUserIdCheckedStatus(userId,productId,checkedStatus);
+        return this.getList(userId);
+    }
+
+    @Override
+    public ServiceResponse<Integer> getCartProductCount(Integer userId){
+        if (userId == null){
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGMENT.getCode(),ResponseCode.ILLEGAL_ARGMENT.getDesc());
+        }
+        return ServiceResponse.createBySuccess(cartMapper.getQuantityByUserId(userId));
+    }
+
+    public ServiceResponse<CartVo> getList(Integer userId){
         //将要返回的Cart数据封装成一个对象并返回
         return ServiceResponse.createBySuccess(this.getCartVo(userId));
     }
+
 
     public CartVo getCartVo(Integer userId){
         CartVo cartVo = new CartVo();

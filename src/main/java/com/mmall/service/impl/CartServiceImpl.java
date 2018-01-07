@@ -25,7 +25,7 @@ import java.util.List;
  * Created by zhonglunsheng on 2018/1/4.
  */
 @Service("iCartService")
-public class CartService implements ICartService{
+public class CartServiceImpl implements ICartService{
 
     @Autowired
     private CartMapper cartMapper;

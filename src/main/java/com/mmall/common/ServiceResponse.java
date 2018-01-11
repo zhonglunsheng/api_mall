@@ -73,12 +73,8 @@ public class ServiceResponse<T> implements Serializable{
         return new ServiceResponse<T>(ResponseCode.ERROR.getCode());
     }
 
-    public static <T> ServiceResponse<T> createByErrorMessage(String msg){
-        return new ServiceResponse<T>(ResponseCode.ERROR.getCode(),msg);
-    }
-
-    public static <T> ServiceResponse<T> createByErrorCodeMessage(int code,String msg){
-        return new ServiceResponse<T>(code,msg);
+    public static <T> ServiceResponse<T> createByError(T date){
+        return new ServiceResponse<T>(ResponseCode.ERROR.getCode(),date);
     }
 
     public static <T> ServiceResponse<T> createByError(String errorMsg){
@@ -90,9 +86,12 @@ public class ServiceResponse<T> implements Serializable{
         return new ServiceResponse<T>(ResponseCode.ERROR.getCode(),errorMsg,data);
     }
 
+    public static <T> ServiceResponse<T> createByErrorMessage(String msg){
+        return new ServiceResponse<T>(ResponseCode.ERROR.getCode(),msg);
+    }
 
-
-
-
+    public static <T> ServiceResponse<T> createByErrorCodeMessage(int code,String msg){
+        return new ServiceResponse<T>(code,msg);
+    }
 
 }

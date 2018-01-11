@@ -40,9 +40,8 @@ public class FileServiceImpl implements IFileService {
         File targetFile = new File(path,uploadName);
         try {
             file.transferTo(targetFile);
-
             FTPUtil.uploadFile(Lists.newArrayList(targetFile));
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("上传文件异常");
             return null;
         }

@@ -34,15 +34,14 @@ public class FTPUtil {
         this.pwd = pwd;
     }
 
-    public static boolean uploadFile(List<File> fileList)throws IOException{
+    public static boolean uploadFile(List<File> fileList)throws Exception{
         FTPUtil ftpUtil = new FTPUtil(ftpIp,21,ftpUser,ftpPass);
         logger.info("开始连接服务器");
         boolean result = ftpUtil.uploadFile("img",fileList);
-        logger.info("开始连接ftp服务器,结束上传,上传结果:{}",result);
         return result;
     }
 
-    private  boolean uploadFile(String remotePath,List<File> fileList){
+    private  boolean uploadFile(String remotePath,List<File> fileList)throws Exception{
         boolean upload = true;
         FileInputStream fis = null;
         if (connectServe(this.ip,this.user,this.pwd)){
@@ -69,11 +68,13 @@ public class FTPUtil {
                 }
 
             }
+        }else{
+            throw new Exception("连接服务器异常");
         }
         return upload;
     }
 
-    private  boolean connectServe(String ip,String user,String pwd){
+    private boolean connectServe(String ip,String user,String pwd){
         boolean isSuccess = false;
         ftpClient = new FTPClient();
         try {

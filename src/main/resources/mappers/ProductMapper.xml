@@ -213,4 +213,11 @@
       </foreach>
     </if>
   </select>
+  
+ <update id="updateStockByProductIdAndQuantity" parameterType="map">
+   update
+   mmall_product
+   set stock=stock-#{quantity}
+   where id=#{productId}
+ </update>
 </mapper>

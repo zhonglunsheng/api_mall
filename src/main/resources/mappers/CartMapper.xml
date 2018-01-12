@@ -163,4 +163,11 @@
     FROM mmall_cart
     WHERE user_id=#{userId}
   </select>
+
+  <select id="selectCheckByUserId" parameterType="int" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"></include>
+    from mmall_cart
+    where user_id=#{userId}
+  </select>
 </mapper>

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +33,75 @@ public class OrderController {
     private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
     @Autowired
     private IOrderService iOrderService;
+
+    /**
+     * 创建订单
+     * @param session
+     * @param shippingId
+     * @return
+     */
+    @RequestMapping("create_order.do")
+    @ResponseBody
+    public ServiceResponse createOrder(HttpSession session,Integer shippingId){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iOrderService.createOrder(user.getId(),shippingId);
+    }
+
+    /**
+     * 取消订单
+     * @param session
+     * @param orderNo
+     * @return
+     */
+    @RequestMapping("cancel_order.do")
+    @ResponseBody
+    public ServiceResponse cancelOrder(HttpSession session,Long orderNo){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iOrderService.cancelOrder(orderNo);
+    }
+
+    /**
+     * 查看订单商品
+     * @param session
+     * @param orderNo
+     * @return
+     */
+    @RequestMapping("get_order_product.do")
+    @ResponseBody
+    public ServiceResponse getOrderProduct(HttpSession session,Long orderNo){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iOrderService.getOrderProduct(user.getId(),orderNo);
+    }
+
+
+    @RequestMapping("detail.do")
+    @ResponseBody
+    public ServiceResponse detail(HttpSession session,Long orderNo){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iOrderService.getOrderDetail(user.getId(),orderNo);
+    }
+
+    @RequestMapping("list.do")
+    @ResponseBody
+    public ServiceResponse list(HttpSession session, @RequestParam(value = "pageNum",defaultValue = "1") Integer pageNum, @RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize) {
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
+        }
+        return iOrderService.getOrderList(user.getId(), pageNum, pageSize);
+    }
 
 
     /**
@@ -103,7 +173,7 @@ public class OrderController {
      * @param orderNo
      * @return
      */
-    @RequestMapping("aliRefund.do")
+    @RequestMapping("ali_refund.do")
     @ResponseBody
     public ServiceResponse aliRefund(HttpSession session,Long orderNo){
         User user = (User) session.getAttribute(Const.CURRENT_USER);

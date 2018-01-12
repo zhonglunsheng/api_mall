@@ -29,4 +29,6 @@ public interface CartMapper {
     int updateByUserIdCheckedStatus(@Param(value = "userId") Integer userId,@Param(value = "productId") Integer productId,@Param(value = "checkedStatus") Integer checkedStatus);
 
     int getQuantityByUserId(@Param(value = "userId") Integer userId);
+
+    List<Cart> selectCheckByUserId(Integer userId);
 }

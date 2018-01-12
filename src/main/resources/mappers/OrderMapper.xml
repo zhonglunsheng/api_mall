@@ -212,4 +212,14 @@
     from mmall_order
     where order_no=#{orderNo}
   </select>
+
+  <select id="getOrderListByUserId" parameterType="integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"></include>
+    from mmall_order
+    <if test="userId != null">
+    where user_id=#{userId}
+    </if>
+    order by create_time desc
+  </select>
 </mapper>

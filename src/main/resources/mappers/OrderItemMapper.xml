@@ -168,6 +168,43 @@
     select
     <include refid="Base_Column_List"></include>
     from mmall_order_item
-    where user_id=#{userId} and order_no=#{orderNo}
+    <where>
+      <if test="userId != null">
+        and user_id=#{userId}
+      </if>
+       and order_no=#{orderNo}
+    </where>
+  </select>
+  
+  <insert id="batchInsert" parameterType="list">
+    insert into
+    mmall_order_item
+    (id, user_id, order_no, product_id, product_name, product_image, current_unit_price,
+    quantity, total_price, create_time, update_time)
+    values
+    <foreach collection="orderItemList" item="item" index="index"  separator="," >
+      (
+        #{item.id},#{item.orderNo},#{item.userId},#{item.productId},#{item.productName},#{item.productImage},#{item.currentUnitPrice},#{item.quantity},#{item.totalPrice},now(),now()
+      )
+    </foreach>
+  </insert>
+
+  <select id="selectByUserId" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"></include>
+    from mmall_order_item
+    <where>
+      <if test="userId != null">
+        and user_id=#{userId}
+      </if>
+        and order_no = #{orderNo}
+    </where>
+  </select>
+
+  <select id="selectByOrderNo" parameterType="long" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"></include>
+    FROM  mmall_order_item
+    where order_no=#{orderNo}
   </select>
 </mapper>

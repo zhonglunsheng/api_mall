@@ -13,9 +13,12 @@
     <appender name="mmall" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!--<File>d:/mmalllog/mmall.log</File>-->
         <File>F:/mmalllog/logs/mmall.log</File>
+        <!--每天生成一个日志文件并自动打包-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>F:/mmalllog/logs/mmall.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <!--日志被追加到文件结尾-->
             <append>true</append>
+            <!--日志保留天数-->
             <maxHistory>10</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -45,6 +48,7 @@
 
     <logger name="com.mmall" additivity="false" level="INFO" >
         <appender-ref ref="mmall" />
+        <appender-ref ref="error" />
         <appender-ref ref="console"/>
     </logger>
 

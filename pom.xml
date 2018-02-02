@@ -11,7 +11,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+    <maveAn.compiler.encoding>UTF-8</maveAn.compiler.encoding>
 
     <org.springframework.version>4.0.0.RELEASE</org.springframework.version>
     <org.mybatis.version>3.4.1</org.mybatis.version>
@@ -245,7 +245,14 @@
       <artifactId>jedis</artifactId>
       <version>2.9.0</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.16.18</version>
+    </dependency>
   </dependencies>
+
 
 
   <build>

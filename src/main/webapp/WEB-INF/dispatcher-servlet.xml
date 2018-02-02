@@ -20,6 +20,7 @@
                     </list>
                 </property>
             </bean>
+            <!--使用Jackson反序列工具转换成json-->
             <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
                 <property name="supportedMediaTypes">
                     <list>

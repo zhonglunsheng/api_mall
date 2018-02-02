@@ -33,11 +33,13 @@
     </listener>
     <context-param>
         <param-name>contextConfigLocation</param-name>
+        <!-- Spring mybatis的配置文件 -->
         <param-value>
             classpath:applicationContext.xml
         </param-value>
     </context-param>
 
+    <!-- Spring MVC servlet 使用默认的配置名-->
     <servlet>
         <servlet-name>dispatcher</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -45,7 +47,7 @@
     </servlet>
 
 
-
+    <!-- 转发的后缀名 -->
     <servlet-mapping>
         <servlet-name>dispatcher</servlet-name>
         <url-pattern>*.do</url-pattern>

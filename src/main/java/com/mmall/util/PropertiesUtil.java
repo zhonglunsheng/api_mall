@@ -45,6 +45,6 @@ public class PropertiesUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(PropertiesUtil.getProperty("ftp.server.ip"));
+        System.out.println(PropertiesUtil.getProperty("ftp.user"));
     }
 }

@@ -255,6 +255,7 @@
 
 
 
+
   <build>
     <finalName>mmall</finalName>
     <plugins>
@@ -294,6 +295,7 @@
         <directory>src/main/resources</directory>
       </resource>
     </resources>
+
   </build>
 
   <profiles>
@@ -319,4 +321,5 @@
       </properties>
     </profile>
   </profiles>
+
 </project>

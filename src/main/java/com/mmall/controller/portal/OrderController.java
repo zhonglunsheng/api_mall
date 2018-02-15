@@ -10,6 +10,10 @@ import com.mmall.common.ServiceResponse;
 import com.mmall.pojo.Order;
 import com.mmall.pojo.User;
 import com.mmall.service.IOrderService;
+import com.mmall.util.CookieUtil;
+import com.mmall.util.JsonUtil;
+import com.mmall.util.RedisPoolUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -34,48 +37,45 @@ public class OrderController {
     @Autowired
     private IOrderService iOrderService;
 
-    /**
-     * 创建订单
-     * @param session
-     * @param shippingId
-     * @return
-     */
+
     @RequestMapping("create_order.do")
     @ResponseBody
-    public ServiceResponse createOrder(HttpSession session,Integer shippingId){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse createOrder(HttpServletRequest request,Integer shippingId){
+        String loginToken = CookieUtil.readLoginToken(request);
+        if (StringUtils.isEmpty(loginToken)){
+            return ServiceResponse.createByErrorMessage("用户未登录");
+        }
+        User user = JsonUtil.string2Obj(RedisPoolUtil.get(loginToken),User.class);
         if (user == null) {
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
         }
         return iOrderService.createOrder(user.getId(),shippingId);
     }
 
-    /**
-     * 取消订单
-     * @param session
-     * @param orderNo
-     * @return
-     */
+
     @RequestMapping("cancel_order.do")
     @ResponseBody
-    public ServiceResponse cancelOrder(HttpSession session,Long orderNo){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse cancelOrder(HttpServletRequest request,Long orderNo){
+        String loginToken = CookieUtil.readLoginToken(request);
+        if (StringUtils.isEmpty(loginToken)){
+            return ServiceResponse.createByErrorMessage("用户未登录");
+        }
+        User user = JsonUtil.string2Obj(RedisPoolUtil.get(loginToken),User.class);
         if (user == null) {
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
         }
         return iOrderService.cancelOrder(orderNo);
     }
 
-    /**
-     * 查看订单商品
-     * @param session
-     * @param orderNo
-     * @return
-     */
+
     @RequestMapping("get_order_product.do")
     @ResponseBody
-    public ServiceResponse getOrderProduct(HttpSession session,Long orderNo){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse getOrderProduct(HttpServletRequest request,Long orderNo){
+        String loginToken = CookieUtil.readLoginToken(request);
+        if (StringUtils.isEmpty(loginToken)){
+            return ServiceResponse.createByErrorMessage("用户未登录");
+        }
+        User user = JsonUtil.string2Obj(RedisPoolUtil.get(loginToken),User.class);
         if (user == null) {
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -85,8 +85,12 @@ public class OrderController {
 
     @RequestMapping("detail.do")
     @ResponseBody
-    public ServiceResponse detail(HttpSession session,Long orderNo){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse detail(HttpServletRequest request,Long orderNo){
+        String loginToken = CookieUtil.readLoginToken(request);
+        if (StringUtils.isEmpty(loginToken)){
+            return ServiceResponse.createByErrorMessage("用户未登录");
+        }
+        User user = JsonUtil.string2Obj(RedisPoolUtil.get(loginToken),User.class);
         if (user == null) {
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -95,8 +99,12 @@ public class OrderController {
 
     @RequestMapping("list.do")
     @ResponseBody
-    public ServiceResponse list(HttpSession session, @RequestParam(value = "pageNum",defaultValue = "1") Integer pageNum, @RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize) {
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse list(HttpServletRequest request, @RequestParam(value = "pageNum",defaultValue = "1") Integer pageNum, @RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize) {
+        String loginToken = CookieUtil.readLoginToken(request);
+        if (StringUtils.isEmpty(loginToken)){
+            return ServiceResponse.createByErrorMessage("用户未登录");
+        }
+        User user = JsonUtil.string2Obj(RedisPoolUtil.get(loginToken),User.class);
         if (user == null) {
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -104,17 +112,15 @@ public class OrderController {
     }
 
 
-    /**
-     * 支付预下单
-     * @param session
-     * @param request
-     * @param orderNo
-     * @return
-     */
+
     @RequestMapping("pay.do")
     @ResponseBody
-    public ServiceResponse pay(HttpSession session, HttpServletRequest request,Long orderNo){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse pay(HttpServletRequest request,Long orderNo){
+        String loginToken = CookieUtil.readLoginToken(request);
+        if (StringUtils.isEmpty(loginToken)){
+            return ServiceResponse.createByErrorMessage("用户未登录");
+        }
+        User user = JsonUtil.string2Obj(RedisPoolUtil.get(loginToken),User.class);
         if (user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -167,32 +173,30 @@ public class OrderController {
         return Const.AlipayCallback.RESPONSE_FAILED;
     }
 
-    /**
-     * 支付宝退款
-     * @param session
-     * @param orderNo
-     * @return
-     */
+
     @RequestMapping("ali_refund.do")
     @ResponseBody
-    public ServiceResponse aliRefund(HttpSession session,Long orderNo){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse aliRefund(HttpServletRequest request,Long orderNo){
+        String loginToken = CookieUtil.readLoginToken(request);
+        if (StringUtils.isEmpty(loginToken)){
+            return ServiceResponse.createByErrorMessage("用户未登录");
+        }
+        User user = JsonUtil.string2Obj(RedisPoolUtil.get(loginToken),User.class);
         if (user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
         return iOrderService.aliRefund(user.getId(),orderNo);
     }
 
-    /**
-     * 查询订单支付是否完成
-     * @param session
-     * @param orderNo
-     * @return
-     */
+
     @RequestMapping("query_order_pay_status.do")
     @ResponseBody
-    public ServiceResponse queryOrderPayStatus(HttpSession session,Long orderNo){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServiceResponse queryOrderPayStatus(HttpServletRequest request,Long orderNo){
+        String loginToken = CookieUtil.readLoginToken(request);
+        if (StringUtils.isEmpty(loginToken)){
+            return ServiceResponse.createByErrorMessage("用户未登录");
+        }
+        User user = JsonUtil.string2Obj(RedisPoolUtil.get(loginToken),User.class);
         if (user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }

@@ -25,6 +25,8 @@ public interface IOrderService {
 
     ServiceResponse managerSendGoods(Long orderNo);
 
+    void closeOrder(int hour);
+
     ServiceResponse pay(Long orderNo, Integer userId, String path);
 
     ServiceResponse aliCallback(Map<String, String> params);

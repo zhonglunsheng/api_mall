@@ -33,14 +33,27 @@ public class RedisShardedPoolUtil {
         return result;
     }
 
-    public static String setEx(String key, String value, int exTime){
+    public static Long setnx(String key, String value){
+        ShardedJedis shardedJedis = null;
+        Long result = null;
+        try {
+            shardedJedis = RedisShardedPool.getShardedJedis();
+            result = shardedJedis.setnx(key,value);
+        } catch (Exception e) {
+            log.error("set key:{} value:{} extime:{} error",key,value,e);
+        }
+        RedisShardedPool.closeJedis(shardedJedis);
+        return result;
+    }
+
+    public static String setEx(String key, String value, int time){
         ShardedJedis shardedJedis = null;
         String result = null;
         try {
             shardedJedis = RedisShardedPool.getShardedJedis();
-            result = shardedJedis.setex(key,exTime,value);
+            result = shardedJedis.setex(key,time,value);
         } catch (Exception e) {
-            log.error("set key:{} value:{} extime:{} error",key,value,exTime,e);
+            log.error("set key:{} value:{} extime:{} error",key,value,e);
         }
         RedisShardedPool.closeJedis(shardedJedis);
         return result;
@@ -67,6 +80,19 @@ public class RedisShardedPoolUtil {
             result = shardedJedis.del(key);
         } catch (Exception e) {
             log.error("del key:{} error",key,e);
+        }
+        RedisShardedPool.closeJedis(shardedJedis);
+        return result;
+    }
+
+    public static String getSet(String key, String value){
+        ShardedJedis shardedJedis = null;
+        String result = null;
+        try {
+            shardedJedis = RedisShardedPool.getShardedJedis();
+            result = shardedJedis.getSet(key,value);
+        } catch (Exception e) {
+            log.error("set key:{} value:{} extime:{} error",key,value,e);
         }
         RedisShardedPool.closeJedis(shardedJedis);
         return result;

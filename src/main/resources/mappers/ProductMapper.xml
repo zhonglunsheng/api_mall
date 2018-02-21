@@ -220,4 +220,11 @@
    set stock=stock-#{quantity}
    where id=#{productId}
  </update>
+
+  <select id="getProductStockById" resultType="integer" parameterType="integer">
+    select stock
+    from mmall_product
+    where id = #{id}
+    for update
+  </select>
 </mapper>

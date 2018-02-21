@@ -19,6 +19,7 @@ import com.mmall.vo.OrderItemVo;
 import com.mmall.vo.OrderProductVo;
 import com.mmall.vo.OrderVo;
 import com.mmall.vo.ShippingVo;
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +41,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by zhonglunsheng on 2018/1/10.
@@ -240,6 +238,33 @@ public class OrderServiceImpl implements IOrderService{
         return ServiceResponse.createByError();
     }
 
+    @Override
+    public void closeOrder(int hour){
+        Date closeTime = DateUtils.addHours(new Date(),-hour);
+        List<Order> orderList = orderMapper.getOrderStatusByCreatetime(Const.OrderStatusEnum.NO_PAY.getCode(),DateTimeUtil.dateToStr(closeTime));
+
+        for (Order order:
+             orderList) {
+            List<OrderItem> orderItemList = orderItemMapper.selectByOrderNo(order.getOrderNo());
+
+            for (OrderItem orderItem:
+                 orderItemList) {
+                Integer stock = productMapper.getProductStockById(orderItem.getProductId());
+                //商品不存在直接跳过
+                if (stock == null){
+                    continue;
+                }
+                Product product = new Product();
+                product.setId(orderItem.getProductId());
+                product.setStock(stock + orderItem.getQuantity());
+                productMapper.updateByPrimaryKeySelective(product);
+            }
+
+            orderMapper.closeOrderByOrderId(order.getId());
+            log.info("关闭订单OrderNo:{}",order.getOrderNo());
+        }
+
+    }
     private List<OrderVo> assembleOrderVoList(List<Order> orderList, Integer userId){
         List<OrderVo> orderVoList = Lists.newArrayList();
         for (Order order:
@@ -642,4 +667,6 @@ public class OrderServiceImpl implements IOrderService{
             log.info("body:" + response.getBody());
         }
     }
+
+
 }

@@ -222,4 +222,21 @@
     </if>
     order by create_time desc
   </select>
+
+  <select id="getOrderStatusByCreatetime" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List"></include>
+    FROM mmall_order
+    WHERE status = #{status}
+    <![CDATA[
+    AND create_time <= #{date}
+  ]]>
+    order by create_time desc
+  </select>
+
+  <update id="closeOrderByOrderId" parameterType="integer">
+    update mmall_order
+    set status = 0
+    where id = #{id}
+  </update>
 </mapper>

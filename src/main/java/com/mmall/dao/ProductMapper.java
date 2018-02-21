@@ -25,4 +25,6 @@ public interface ProductMapper {
     List<Product> searchProductByKeywordAndCategoryIds(@Param(value = "keyword") String keyword, @Param(value = "categoryIdsList")List<Integer> categoryIdsList);
 
     int updateStockByProductIdAndQuantity(@Param(value = "productId") Integer productId,@Param(value = "quantity") Integer quantity);
+
+    Integer getProductStockById(Integer id);
 }

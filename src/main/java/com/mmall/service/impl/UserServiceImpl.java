@@ -53,6 +53,7 @@ public class UserServiceImpl implements IUserService{
         }
 
         user.setRole(Const.Role.ROLE_CUSTOM);
+        user.setPassword(MD5Util.MD5EncodeUtf8(user.getPassword()));
         int result = userMapper.insert(user);
         if (result == 0){
             return ServiceResponse.createByErrorMessage("注册失败");

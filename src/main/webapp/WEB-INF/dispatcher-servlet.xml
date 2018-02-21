@@ -40,5 +40,12 @@
         <property name="defaultEncoding" value="UTF-8"></property>
     </bean>
 
+    <mvc:interceptors>
+        <!-- 定义在这里的所有都会拦截 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/manage/**"/>
+            <bean class="com.mmall.controller.common.interceptor.AutorityInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
 
 </beans>

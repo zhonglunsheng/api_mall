@@ -188,50 +188,35 @@ public class ProductManagerController {
 
     /**
      *wangEditor富文本图片上传
-     * @param session
      * @param file
      * @param request
      * @param response
      * @return
      */
-    @RequestMapping(value = "richtext_img_upload.do",method = RequestMethod.POST)
+    @RequestMapping("richtext_img_upload.do")
     @ResponseBody
-    public Map richtextImgUpload(HttpSession session, @RequestParam(value = "upload_file",required = false) MultipartFile file, HttpServletRequest request,HttpServletResponse response){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public Map richtextImgUpload(@RequestParam(value = "upload_file",required = false) MultipartFile file, HttpServletRequest request, HttpServletResponse response){
         Map resultMap = Maps.newHashMap();
-        if (user == null){
-            resultMap.put("errno",1);
-            return resultMap;
-        }
-        if (iUserService.checkAdminRole(user).isSuccess()){
-            String path = request.getSession().getServletContext().getRealPath("upload");
-            String targetFileName = iFileService.upload(file,path);
-            String url = PropertiesUtil.getProperty("ftp.server.http.prefix")+targetFileName;
-            List<String> urlList = Lists.newArrayList();
-            urlList.add("http://blog.i20forever.cn/content/templates/limh.me/images/random/tb10.jpg");
-            /*{
-                // errno 即错误代码，0 表示没有错误。
-                //       如果有错误，errno != 0，可通过下文中的监听函数 fail 拿到该错误码进行自定义处理
-                errno: 0,
 
-                        // data 是一个数组，返回若干图片的线上地址
-                        data: [
-                '图片1地址',
-                        '图片2地址',
-                        '……'
-                ]
-            }*/
-            if (StringUtils.isBlank(targetFileName)){
-                resultMap.put("errno",1);
+
+       //富文本中对于返回值有自己的要求,我们使用是simditor所以按照simditor的要求进行返回
+////        {
+////            "success": true/false,
+////                "msg": "error message", # optional
+////            "file_path": "[real file path]"
+////        }
+           String path = request.getSession().getServletContext().getRealPath("upload");
+           String targetFileName = iFileService.upload(file,path);
+            if(StringUtils.isBlank(targetFileName)){
+                resultMap.put("success",false);
+                resultMap.put("msg","上传失败");
                 return resultMap;
             }
-            resultMap.put("errno",0);
-            resultMap.put("data",urlList);
+            String url = PropertiesUtil.getProperty("ftp.server.http.prefix")+targetFileName;
+            resultMap.put("success",true);
+            resultMap.put("msg","上传成功");
+            resultMap.put("file_path",url);
             response.addHeader("Access-Control-Allow-Headers","X-File-Name");
             return resultMap;
-        }else {
-            resultMap.put("errno",1);
-            return resultMap;
-        }
     }
 }

@@ -38,7 +38,7 @@ public class OrderController {
     private IOrderService iOrderService;
 
 
-    @RequestMapping("create_order.do")
+    @RequestMapping("create.do")
     @ResponseBody
     public ServiceResponse createOrder(HttpServletRequest request,Integer shippingId){
         String loginToken = CookieUtil.readLoginToken(request);
@@ -53,7 +53,7 @@ public class OrderController {
     }
 
 
-    @RequestMapping("cancel_order.do")
+    @RequestMapping("cancel.do")
     @ResponseBody
     public ServiceResponse cancelOrder(HttpServletRequest request,Long orderNo){
         String loginToken = CookieUtil.readLoginToken(request);
@@ -68,7 +68,7 @@ public class OrderController {
     }
 
 
-    @RequestMapping("get_order_product.do")
+    @RequestMapping("get_order_cart_product.do")
     @ResponseBody
     public ServiceResponse getOrderProduct(HttpServletRequest request,Long orderNo){
         String loginToken = CookieUtil.readLoginToken(request);

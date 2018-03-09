@@ -59,7 +59,7 @@ public class CartController {
     }
 
 
-    @RequestMapping("delete.do")
+    @RequestMapping("delete_product.do")
     @ResponseBody
     public ServiceResponse<CartVo> delete(HttpServletRequest request,String productIds){
         String loginToken = CookieUtil.readLoginToken(request);
@@ -90,7 +90,7 @@ public class CartController {
     }
 
 
-    @RequestMapping("checkedAll.do")
+    @RequestMapping("select_all.do.do")
     @ResponseBody
     public ServiceResponse<CartVo> checkedAll(HttpServletRequest request){
         String loginToken = CookieUtil.readLoginToken(request);
@@ -105,7 +105,7 @@ public class CartController {
     }
 
 
-    @RequestMapping("uncheckedAll.do")
+    @RequestMapping("un_select_all.do")
     @ResponseBody
     public ServiceResponse<CartVo> unCheckedAll(HttpServletRequest request){
         String loginToken = CookieUtil.readLoginToken(request);
@@ -120,7 +120,7 @@ public class CartController {
     }
 
 
-    @RequestMapping("checked.do")
+    @RequestMapping("select.do")
     @ResponseBody
     public ServiceResponse<CartVo> checked(HttpServletRequest request,Integer productId){
         String loginToken = CookieUtil.readLoginToken(request);
@@ -135,7 +135,7 @@ public class CartController {
     }
 
 
-    @RequestMapping("unchecked.do")
+    @RequestMapping("un_select.do")
     @ResponseBody
     public ServiceResponse<CartVo> unChecked(HttpServletRequest request,Integer productId){
         String loginToken = CookieUtil.readLoginToken(request);
@@ -149,7 +149,7 @@ public class CartController {
         return iCartService.checkedOrUnchecked(user.getId(),productId,Const.Cart.UN_CHECKED);
     }
 
-    @RequestMapping("getCount.do")
+    @RequestMapping("get_cart_product_count.do")
     @ResponseBody
     public ServiceResponse<Integer> getCount(HttpServletRequest request){
         String loginToken = CookieUtil.readLoginToken(request);

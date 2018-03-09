@@ -93,7 +93,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "get_user_info.do",method = RequestMethod.GET)
+    @RequestMapping(value = "get_user_info.do",method = RequestMethod.POST)
     @ResponseBody
     public ServiceResponse<User> getUserInfo(HttpServletRequest request){
         String loginToken = CookieUtil.readLoginToken(request);
@@ -128,7 +128,7 @@ public class UserController {
         return iUserService.restPassword(username,passwordNew,forgetToken);
     }
 
-    @RequestMapping(value = "update_password.do",method = RequestMethod.POST)
+    @RequestMapping(value = "rest_password.do",method = RequestMethod.POST)
     @ResponseBody
     public ServiceResponse<String> updatePassword(HttpServletRequest request,String passwordOld,String passwordNew){
         String loginToken = CookieUtil.readLoginToken(request);

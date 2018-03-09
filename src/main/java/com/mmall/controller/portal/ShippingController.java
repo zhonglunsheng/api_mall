@@ -45,7 +45,7 @@ public class ShippingController{
         return iShippingService.add(user.getId(),shipping);
     }
 
-    @RequestMapping("delete.do")
+    @RequestMapping("del.do")
     @ResponseBody
     public ServiceResponse delete(HttpServletRequest request, String shippingIds){
         String loginToken = CookieUtil.readLoginToken(request);
@@ -73,7 +73,7 @@ public class ShippingController{
         return iShippingService.update(user.getId(),shipping);
     }
 
-    @RequestMapping("getShipping.do")
+    @RequestMapping("select.do")
     @ResponseBody
     public ServiceResponse getShipping(HttpServletRequest request, Integer shippingId){
         String loginToken = CookieUtil.readLoginToken(request);

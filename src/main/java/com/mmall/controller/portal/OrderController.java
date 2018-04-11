@@ -38,6 +38,12 @@ public class OrderController {
     private IOrderService iOrderService;
 
 
+    /**
+     * 创建订单
+     * @param request
+     * @param shippingId
+     * @return
+     */
     @RequestMapping("create.do")
     @ResponseBody
     public ServiceResponse createOrder(HttpServletRequest request,Integer shippingId){
@@ -53,6 +59,12 @@ public class OrderController {
     }
 
 
+    /**
+     * 取消订单
+     * @param request
+     * @param orderNo
+     * @return
+     */
     @RequestMapping("cancel.do")
     @ResponseBody
     public ServiceResponse cancelOrder(HttpServletRequest request,Long orderNo){
@@ -68,6 +80,12 @@ public class OrderController {
     }
 
 
+    /**
+     * 获取订单商品详情
+     * @param request
+     * @param orderNo
+     * @return
+     */
     @RequestMapping("get_order_cart_product.do")
     @ResponseBody
     public ServiceResponse getOrderProduct(HttpServletRequest request,Long orderNo){
@@ -82,7 +100,12 @@ public class OrderController {
         return iOrderService.getOrderProduct(user.getId(),orderNo);
     }
 
-
+    /**
+     * 查询订单详情
+     * @param request
+     * @param orderNo
+     * @return
+     */
     @RequestMapping("detail.do")
     @ResponseBody
     public ServiceResponse detail(HttpServletRequest request,Long orderNo){
@@ -97,6 +120,13 @@ public class OrderController {
         return iOrderService.getOrderDetail(user.getId(),orderNo);
     }
 
+    /**
+     * 查询订单状态
+     * @param request
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     @RequestMapping("list.do")
     @ResponseBody
     public ServiceResponse list(HttpServletRequest request, @RequestParam(value = "pageNum",defaultValue = "1") Integer pageNum, @RequestParam(value = "pageSize",defaultValue = "10") Integer pageSize) {
@@ -112,7 +142,12 @@ public class OrderController {
     }
 
 
-
+    /**
+     * 发起下单支付请求
+     * @param request
+     * @param orderNo
+     * @return
+     */
     @RequestMapping("pay.do")
     @ResponseBody
     public ServiceResponse pay(HttpServletRequest request,Long orderNo){
@@ -129,7 +164,8 @@ public class OrderController {
     }
 
     /**
-     * 支付宝回调
+     * 支付宝回调（主动轮询）
+     * 超时自动关闭
      * @param request
      * @return
      */
@@ -174,6 +210,12 @@ public class OrderController {
     }
 
 
+    /**
+     * 退款
+     * @param request
+     * @param orderNo
+     * @return
+     */
     @RequestMapping("ali_refund.do")
     @ResponseBody
     public ServiceResponse aliRefund(HttpServletRequest request,Long orderNo){
@@ -189,6 +231,12 @@ public class OrderController {
     }
 
 
+    /**
+     * 查询支部宝商户端订单状态
+     * @param request
+     * @param orderNo
+     * @return
+     */
     @RequestMapping("query_order_pay_status.do")
     @ResponseBody
     public ServiceResponse queryOrderPayStatus(HttpServletRequest request,Long orderNo){

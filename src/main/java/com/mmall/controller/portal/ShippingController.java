@@ -47,7 +47,7 @@ public class ShippingController{
 
     @RequestMapping("del.do")
     @ResponseBody
-    public ServiceResponse delete(HttpServletRequest request, String shippingIds){
+    public ServiceResponse delete(HttpServletRequest request, String shippingId){
         String loginToken = CookieUtil.readLoginToken(request);
         if (StringUtils.isEmpty(loginToken)){
             return ServiceResponse.createByErrorMessage("用户未登录");
@@ -56,7 +56,7 @@ public class ShippingController{
         if (user == null){
             return ServiceResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iShippingService.delete(user.getId(),shippingIds);
+        return iShippingService.delete(user.getId(),shippingId);
     }
 
     @RequestMapping("update.do")

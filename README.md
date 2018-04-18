@@ -1,7 +1,33 @@
 #### 项目介绍
-基于Spring+SpringMvc+Mybatis敏捷开发系统架构，提供了电商平台基础模块：用户管理、商品管理、购物车、订单管理、收获地址、在线支付
+基于Spring+SpringMvc+Mybatis系统架构，电商平台基础模块开发：用户管理、商品管理、购物车、订单管理、收获地址、在线支付
 #### 组织结构
-![mark](http://upload.i20forever.cn/blog/180418/gJfjH7bD4k.png?imageslim)
+```
+├── README.md                   // help
+├── mmall
+│   ├── common             // 公共包
+│   |   ├── Const.java        // 常量
+│   |   ├── ExceptionResolver // 全局异常处理
+│   |   ├── RedisPool         // Jedis连接池
+│   |   ├── RedisShardedPool  // ShardedJedis连接池
+│   |   ├── ResponseCode      // 系统响应状态码
+│   |   └── ServiceResponse   // 高复用响应
+│   ├── controller              // 控制层
+│   ├── backend                 // 后台接口
+│   ├── common                  // 公共接口
+│   └── portal                  // 前台接口
+│   ├── dao                     // 数据访问
+│   ├── pojo                    // 对象模型
+│   ├── service                 // 业务处理
+│   ├── task                    // 定时任务
+│   ├── util                    // 工具类
+│   └── vo                      // 表示层对象
+├── resources                   //ssm xml配置
+│   ├── beta                    // 测试环境
+│   ├── dev                     // 开发环境
+│   └── prod                    // 线上环境
+├── tool
+└── webapp
+```
 
 #### 技术选型
 ##### 后端技术

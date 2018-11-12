@@ -42,7 +42,7 @@ MyBatis | ORM框架 | http://www.mybatis.org/mybatis-3/zh/index.html
 MyBatis Generator | 代码生成 | http://www.mybatis.org/generator/index.html
 PageHelper | MyBatis物理分页插件 | http://git.oschina.net/free/Mybatis_PageHelper
 Redis | 分布式缓存数据库 | https://redis.io/
-nginx | 复杂均衡 | https://www.nginx.com/
+nginx | 负载均衡 | https://www.nginx.com/
 tomcat | Java应用服务器 | http://tomcat.apache.org/
 Redisson | Java驻内存数据网格 | https://redisson.org/
 Logback | 日志组件 | https://logback.qos.ch/

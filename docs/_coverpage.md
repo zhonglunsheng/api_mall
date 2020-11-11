@@ -1,12 +1,12 @@
-![logo](_media/icon.svg)
+![logo](_media/logo.png)
 
-# docsify <small>3.5</small>
 
-> 一个神奇的文档网站生成器。
+## 电商管理系统
+- 高可用、高并发、高复用
+- 开源、支持商用
+- SSM框架入门学习
 
-- 简单、轻便 (压缩后 ~21kB)
-- 无需生成 html 文件
-- 众多主题
+[GitHub](https://github.com/zhonglunsheng/api_mall/)
+[Get Started](/guide)
 
-[GitHub](https://github.com/docsifyjs/docsify/)
-[Get Started](#docsify)
+![](_media/bg.jpg)
